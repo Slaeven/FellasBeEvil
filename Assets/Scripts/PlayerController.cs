@@ -5,6 +5,9 @@ using UnityEngine.InputSystem;
 [RequireComponent(typeof(PlayerInput))]
 public class PlayerController : MonoBehaviour
 {
+    [Header("UI")]
+    [SerializeField] private GameObject crosshair;
+
     [Header("Movement")]
     [SerializeField] private float moveSpeed = 3.5f;
     [SerializeField] private float aimMoveSpeed = 1.75f;
@@ -24,6 +27,14 @@ public class PlayerController : MonoBehaviour
     [SerializeField] private float normalFOV = 60f;
     [SerializeField] private float aimFOV = 45f;
     [SerializeField] private float cameraAimSmoothSpeed = 10f;
+
+    [Header("Weapon")]
+    [SerializeField] private WeaponBase equippedWeapon;
+
+    private InputAction fireAction;
+    private InputAction reloadAction;
+    private bool wasFirePressed;
+    private bool wasReloadPressed;
 
     private Camera cam;
 
@@ -54,10 +65,26 @@ public class PlayerController : MonoBehaviour
         lookAction = playerInput.actions["Look"];
         aimAction = playerInput.actions["Aim"];
 
+        fireAction = playerInput.actions.FindAction("Fire", false);
+        reloadAction = playerInput.actions.FindAction("Reload", false);
+
         if (mainCamera != null)
         {
             cam = mainCamera.GetComponent<Camera>();
         }
+
+        if (fireAction == null)
+            Debug.LogError("Missing input action: Fire");
+
+        if (reloadAction == null)
+            Debug.LogError("Missing input action: Reload");
+
+        if (equippedWeapon != null)
+        {
+            equippedWeapon.Initialise(cam);
+        }
+
+
     }
 
     private void OnEnable()
@@ -65,6 +92,9 @@ public class PlayerController : MonoBehaviour
         moveAction.Enable();
         lookAction.Enable();
         aimAction.Enable();
+
+        fireAction?.Enable();
+        reloadAction?.Enable();
     }
 
     private void OnDisable()
@@ -72,12 +102,19 @@ public class PlayerController : MonoBehaviour
         moveAction.Disable();
         lookAction.Disable();
         aimAction.Disable();
+
+        fireAction?.Disable();
+        reloadAction?.Disable();
     }
 
     private void Update()
     {
-
         ReadInput();
+
+        if (crosshair != null)
+        {
+            crosshair.SetActive(isAiming);
+        }
 
         HandleMovement();
         HandleCamera();
@@ -93,11 +130,31 @@ public class PlayerController : MonoBehaviour
         float aimValue = aimAction.ReadValue<float>();
         isAiming = aimValue > 0.2f;
 
-        // Temporary debug. Remove later.
-        if (aimValue > 0.01f)
+        float fireValue = fireAction != null ? fireAction.ReadValue<float>() : 0f;
+        bool isFirePressed = fireValue > 0.2f;
+
+        if (isFirePressed && !wasFirePressed)
         {
-            Debug.Log("Aim value: " + aimValue + " | Aiming: " + isAiming);
+            if (isAiming && equippedWeapon != null)
+            {
+                equippedWeapon.TryFire();
+            }
         }
+
+        wasFirePressed = isFirePressed;
+
+        float reloadValue = reloadAction != null ? reloadAction.ReadValue<float>() : 0f;
+        bool isReloadPressed = reloadValue > 0.2f;
+
+        if (isReloadPressed && !wasReloadPressed)
+        {
+            if (equippedWeapon != null)
+            {
+                equippedWeapon.TryReload();
+            }
+        }
+
+        wasReloadPressed = isReloadPressed;
     }
 
     private void HandleMovement()
