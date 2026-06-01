@@ -4,6 +4,7 @@ public abstract class WeaponBase : MonoBehaviour
 {
     [Header("Identity")]
     [SerializeField] private string displayName;
+    [SerializeField] protected WeaponType weaponType = WeaponType.Handgun;
 
     [Header("Weapon Stats")]
     [SerializeField] protected float damage = 25f;
@@ -59,6 +60,7 @@ public abstract class WeaponBase : MonoBehaviour
     public int ReserveAmmo => inventory != null ? inventory.GetAmmoCount(ammoType) : reserveAmmo;
     public int MagazineSize => magazineSize;
     public AmmoType AmmoType => ammoType;
+    public WeaponType WeaponType => weaponType;
     public string DisplayName => string.IsNullOrWhiteSpace(displayName) ? GetType().Name : displayName;
     public bool IsReloading => isReloading;
     public virtual bool FiresContinuously => false;
@@ -331,6 +333,10 @@ public abstract class WeaponBase : MonoBehaviour
     }
 
     public virtual void ToggleScope()
+    {
+    }
+
+    public virtual void SetAiming(bool aiming)
     {
     }
 

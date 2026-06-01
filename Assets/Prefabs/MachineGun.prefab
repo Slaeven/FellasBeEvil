@@ -80,6 +80,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MachineGun
   displayName: Ratatatat
+  weaponType: 2
   damage: 10
   range: 55
   fireCooldown: 0.09

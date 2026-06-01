@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Handgun
   displayName: Pistola
+  weaponType: 0
   damage: 25
   range: 50
   fireCooldown: 0.35

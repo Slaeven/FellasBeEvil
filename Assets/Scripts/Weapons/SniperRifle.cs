@@ -8,16 +8,15 @@ public class SniperRifle : WeaponBase
     [SerializeField, Range(0f, 1f)] private float boltActionVolume = 1f;
 
     [Header("Scope")]
-    [SerializeField] private bool startScoped;
     [SerializeField] private float scopedFOV = 18f;
     [SerializeField] private GameObject scopeOverlay;
 
-    private bool isScoped;
-    private bool hasInitialisedScope;
+    private bool isAiming;
     private Coroutine boltActionRoutine;
 
     private void Reset()
     {
+        weaponType = WeaponType.SniperRifle;
         ammoType = AmmoType.Rifle;
         damage = 90f;
         range = 150f;
@@ -37,12 +36,6 @@ public class SniperRifle : WeaponBase
     {
         base.Initialise(camera, playerInventory);
 
-        if (!hasInitialisedScope)
-        {
-            isScoped = startScoped;
-            hasInitialisedScope = true;
-        }
-
         UpdateScopeOverlay();
     }
 
@@ -58,7 +51,6 @@ public class SniperRifle : WeaponBase
 
     public override void ToggleScope()
     {
-        isScoped = !isScoped;
         UpdateScopeOverlay();
     }
 
@@ -70,7 +62,13 @@ public class SniperRifle : WeaponBase
 
     public override float GetAimFOV(float defaultAimFOV)
     {
-        return isScoped ? scopedFOV : defaultAimFOV;
+        return HasScopeAttachment() ? scopedFOV : defaultAimFOV;
+    }
+
+    public override void SetAiming(bool aiming)
+    {
+        isAiming = aiming;
+        UpdateScopeOverlay();
     }
 
     public override void OnEquipped()
@@ -81,6 +79,7 @@ public class SniperRifle : WeaponBase
     public override void OnUnequipped()
     {
         base.OnUnequipped();
+        isAiming = false;
 
         if (scopeOverlay != null)
             scopeOverlay.SetActive(false);
@@ -96,7 +95,12 @@ public class SniperRifle : WeaponBase
     private void UpdateScopeOverlay()
     {
         if (scopeOverlay != null)
-            scopeOverlay.SetActive(isScoped);
+            scopeOverlay.SetActive(isAiming && HasScopeAttachment());
+    }
+
+    private bool HasScopeAttachment()
+    {
+        return inventory != null && inventory.HasAttachment(AttachmentType.SniperScope);
     }
 
     protected override void OnDisable()

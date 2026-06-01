@@ -4,6 +4,7 @@ public class Handgun : WeaponBase
 {
     private void Reset()
     {
+        weaponType = WeaponType.Handgun;
         ammoType = AmmoType.Handgun;
         damage = 25f;
         range = 50f;

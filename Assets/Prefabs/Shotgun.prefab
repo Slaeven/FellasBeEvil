@@ -48,6 +48,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Shotgun
   displayName: Kablooey
+  weaponType: 1
   damage: 12
   range: 35
   fireCooldown: 0.9

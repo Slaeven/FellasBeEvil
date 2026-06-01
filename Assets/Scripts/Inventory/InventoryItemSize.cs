@@ -11,4 +11,9 @@ public struct InventoryItemSize
         this.width = width;
         this.height = height;
     }
+
+    public InventoryItemSize Rotated()
+    {
+        return new InventoryItemSize(height, width);
+    }
 }

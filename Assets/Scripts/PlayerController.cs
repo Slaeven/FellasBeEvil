@@ -31,6 +31,7 @@ public class PlayerController : MonoBehaviour
 
     [Header("Weapon")]
     [SerializeField] private PlayerInventory inventory;
+    [SerializeField] private InventoryMenuUI inventoryMenu;
     [SerializeField] private WeaponBase[] weapons;
     [SerializeField] private int startingWeaponIndex;
     [SerializeField] private WeaponBase equippedWeapon;
@@ -118,12 +119,18 @@ public class PlayerController : MonoBehaviour
             inventory = GetComponent<PlayerInventory>();
         }
 
+        if (inventoryMenu == null)
+        {
+            inventoryMenu = GetComponent<InventoryMenuUI>();
+        }
+
         if (inventory == null)
         {
             inventory = gameObject.AddComponent<PlayerInventory>();
         }
 
         inventory.InitialiseStartingInventory();
+        inventory.Changed += HandleInventoryChanged;
         InitialiseWeapons();
 
     }
@@ -149,6 +156,9 @@ public class PlayerController : MonoBehaviour
 
     private void OnDisable()
     {
+        if (inventory != null)
+            inventory.Changed -= HandleInventoryChanged;
+
         moveAction.Disable();
         lookAction.Disable();
         aimAction.Disable();
@@ -168,6 +178,12 @@ public class PlayerController : MonoBehaviour
 
     private void Update()
     {
+        if (inventoryMenu != null && inventoryMenu.IsOpen)
+        {
+            equippedWeapon?.SetAiming(false);
+            return;
+        }
+
         ReadInput();
 
         if (crosshair != null)
@@ -191,6 +207,7 @@ public class PlayerController : MonoBehaviour
 
         float fireValue = fireAction != null ? fireAction.ReadValue<float>() : 0f;
         bool isFirePressed = fireValue > 0.2f;
+        equippedWeapon?.SetAiming(isAiming);
 
         if (isFirePressed && isAiming && equippedWeapon != null)
         {
@@ -260,7 +277,11 @@ public class PlayerController : MonoBehaviour
         if (weapons.Length == 0)
             return;
 
-        int weaponIndex = Mathf.Clamp(startingWeaponIndex, 0, weapons.Length - 1);
+        int weaponIndex = GetFirstAvailableWeaponIndex();
+
+        if (IsWeaponAvailable(startingWeaponIndex))
+            weaponIndex = Mathf.Clamp(startingWeaponIndex, 0, weapons.Length - 1);
+
         EquipWeapon(weaponIndex);
     }
 
@@ -302,7 +323,7 @@ public class PlayerController : MonoBehaviour
             return;
 
         int currentIndex = GetEquippedWeaponIndex();
-        EquipWeapon((currentIndex + 1) % weapons.Length);
+        EquipWeapon(GetNextAvailableWeaponIndex(currentIndex, 1));
     }
 
     private void EquipPreviousWeapon()
@@ -311,12 +332,12 @@ public class PlayerController : MonoBehaviour
             return;
 
         int currentIndex = GetEquippedWeaponIndex();
-        EquipWeapon((currentIndex - 1 + weapons.Length) % weapons.Length);
+        EquipWeapon(GetNextAvailableWeaponIndex(currentIndex, -1));
     }
 
     private void EquipWeapon(int index)
     {
-        if (weapons == null || index < 0 || index >= weapons.Length || weapons[index] == null)
+        if (weapons == null || index < 0 || index >= weapons.Length || weapons[index] == null || !IsWeaponAvailable(index))
             return;
 
         if (equippedWeapon != null)
@@ -331,6 +352,7 @@ public class PlayerController : MonoBehaviour
         equippedWeapon = weapons[index];
         equippedWeapon.Initialise(cam, inventory);
         equippedWeapon.OnEquipped();
+        equippedWeapon.SetAiming(isAiming);
 
         Debug.Log($"Equipped {equippedWeapon.name}. Ammo: {equippedWeapon.CurrentAmmo}/{equippedWeapon.ReserveAmmo}");
     }
@@ -344,6 +366,55 @@ public class PlayerController : MonoBehaviour
         }
 
         return 0;
+    }
+
+    private bool IsWeaponAvailable(int index)
+    {
+        if (weapons == null || index < 0 || index >= weapons.Length || weapons[index] == null)
+            return false;
+
+        return inventory == null || inventory.HasWeapon(weapons[index].WeaponType);
+    }
+
+    private int GetFirstAvailableWeaponIndex()
+    {
+        if (weapons == null)
+            return -1;
+
+        for (int i = 0; i < weapons.Length; i++)
+        {
+            if (IsWeaponAvailable(i))
+                return i;
+        }
+
+        return -1;
+    }
+
+    private int GetNextAvailableWeaponIndex(int startIndex, int direction)
+    {
+        if (weapons == null || weapons.Length == 0)
+            return -1;
+
+        for (int offset = 1; offset <= weapons.Length; offset++)
+        {
+            int index = (startIndex + offset * direction + weapons.Length) % weapons.Length;
+
+            if (IsWeaponAvailable(index))
+                return index;
+        }
+
+        return startIndex;
+    }
+
+    private void HandleInventoryChanged()
+    {
+        if (equippedWeapon == null || !inventory.HasWeapon(equippedWeapon.WeaponType))
+        {
+            EquipWeapon(GetFirstAvailableWeaponIndex());
+            return;
+        }
+
+        equippedWeapon.SetAiming(isAiming);
     }
 
     private void HandleMovement()

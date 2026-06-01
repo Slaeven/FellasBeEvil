@@ -17,6 +17,7 @@ public class Shotgun : WeaponBase
 
     private void Reset()
     {
+        weaponType = WeaponType.Shotgun;
         ammoType = AmmoType.Shotgun;
         damage = 12f;
         range = 35f;

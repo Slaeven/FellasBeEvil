@@ -15,7 +15,9 @@ GameObject:
   - component: {fileID: 8322537249824766199}
   - component: {fileID: 8989471455075281562}
   - component: {fileID: 9147680531436562833}
-  m_Layer: 0
+  - component: {fileID: 6545219712469283942}
+  - component: {fileID: 265758224623773401}
+  m_Layer: 6
   m_Name: Player
   m_TagString: Untagged
   m_Icon: {fileID: 0}
@@ -150,6 +152,7 @@ MonoBehaviour:
   aimFOV: 45
   cameraAimSmoothSpeed: 10
   inventory: {fileID: 9147680531436562833}
+  inventoryMenu: {fileID: 6545219712469283942}
   weapons:
   - {fileID: 5641670181930206599}
   - {fileID: 7169052839125723538}
@@ -268,7 +271,93 @@ MonoBehaviour:
   - ammoType: 3
     amount: 10
     maxStack: 10
+  startingWeapons:
+  - weaponType: 0
+    width: 3
+    height: 2
+  - weaponType: 1
+    width: 5
+    height: 2
+  - weaponType: 2
+    width: 3
+    height: 2
+  - weaponType: 3
+    width: 6
+    height: 2
+  startingAttachments:
+  - attachmentType: 0
+    width: 1
+    height: 1
   entries: []
+--- !u!114 &6545219712469283942
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4036842633428491718}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 7fa4d0260ab647138aa58a7cb4513068, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::InventoryMenuUI
+  inventory: {fileID: 9147680531436562833}
+  playerInput: {fileID: 8989471455075281562}
+  canvas: {fileID: 0}
+  overlayPrefab: {fileID: 2782529644145777484, guid: 78d8043fce88afb498cb1e647c738ff4, type: 3}
+  overlayRoot: {fileID: 0}
+  panel: {fileID: 0}
+  gridRoot: {fileID: 0}
+  pendingGridRoot: {fileID: 0}
+  cursor: {fileID: 0}
+  headerText: {fileID: 0}
+  buildMissingLayout: 1
+  toggleActionName: Inventory
+  selectActionName: InventorySelect
+  cancelActionName: InventoryCancel
+  rotateActionName: InventoryRotate
+  moveActionName: Move
+  tileSize: 56
+  tileGap: 4
+  panelPadding: 28
+  liftedItemOffset: {x: 0, y: 0}
+  liftedItemScale: 1.06
+  liftedShadowDistance: {x: 8, y: -8}
+  pendingGridWidth: 3
+  pendingGridHeight: 6
+  overlayColour: {r: 0, g: 0, b: 0, a: 0.65}
+  panelColour: {r: 0.08, g: 0.085, b: 0.075, a: 0.96}
+  tileColour: {r: 0.18, g: 0.19, b: 0.17, a: 0.95}
+  itemColour: {r: 0.45, g: 0.42, b: 0.25, a: 0.98}
+  selectedColour: {r: 0.95, g: 0.8, b: 0.35, a: 0.95}
+  invalidColour: {r: 0.9, g: 0.18, b: 0.12, a: 0.85}
+  audioSource: {fileID: 0}
+  pickupClip: {fileID: 8300000, guid: e9e25056d530eb549a00c887ff57602e, type: 3}
+  placeClip: {fileID: 8300000, guid: 137c984ae1f664344b760c1c35c8e239, type: 3}
+  uiAudioVolume: 1
+--- !u!136 &265758224623773401
+CapsuleCollider:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 4036842633428491718}
+  m_Material: {fileID: 0}
+  m_IncludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_ExcludeLayers:
+    serializedVersion: 2
+    m_Bits: 0
+  m_LayerOverridePriority: 0
+  m_IsTrigger: 0
+  m_ProvidesContacts: 0
+  m_Enabled: 1
+  serializedVersion: 2
+  m_Radius: 0.5
+  m_Height: 2
+  m_Direction: 1
+  m_Center: {x: 0, y: 0, z: 0}
 --- !u!1 &5206841068813236348
 GameObject:
   m_ObjectHideFlags: 0
@@ -559,6 +648,10 @@ PrefabInstance:
       value: Handgun
       objectReference: {fileID: 0}
     - target: {fileID: 6616327231208282848, guid: 15afc9c2159d62149ab6a3bda53efccd, type: 3}
+      propertyPath: damage
+      value: 10
+      objectReference: {fileID: 0}
+    - target: {fileID: 6616327231208282848, guid: 15afc9c2159d62149ab6a3bda53efccd, type: 3}
       propertyPath: fireClip
       value: 
       objectReference: {fileID: 8300000, guid: 9fcb841ed4f8d27438361629c7dee8e5, type: 3}
@@ -569,10 +662,10 @@ PrefabInstance:
     - target: {fileID: 6616327231208282848, guid: 15afc9c2159d62149ab6a3bda53efccd, type: 3}
       propertyPath: audioSource
       value: 
-      objectReference: {fileID: 8963568199758343409}
+      objectReference: {fileID: 3752498284262587845}
     - target: {fileID: 6616327231208282848, guid: 15afc9c2159d62149ab6a3bda53efccd, type: 3}
       propertyPath: displayName
-      value: Pistola
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6616327231208282848, guid: 15afc9c2159d62149ab6a3bda53efccd, type: 3}
       propertyPath: shakeIntensity
@@ -636,6 +729,11 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 4035335327734451596, guid: 15afc9c2159d62149ab6a3bda53efccd, type: 3}
   m_PrefabInstance: {fileID: 1556793756558352231}
   m_PrefabAsset: {fileID: 0}
+--- !u!82 &3752498284262587845 stripped
+AudioSource:
+  m_CorrespondingSourceObject: {fileID: 2416562604816147106, guid: 15afc9c2159d62149ab6a3bda53efccd, type: 3}
+  m_PrefabInstance: {fileID: 1556793756558352231}
+  m_PrefabAsset: {fileID: 0}
 --- !u!114 &5641670181930206599 stripped
 MonoBehaviour:
   m_CorrespondingSourceObject: {fileID: 6616327231208282848, guid: 15afc9c2159d62149ab6a3bda53efccd, type: 3}
@@ -655,11 +753,6 @@ Transform:
 --- !u!4 &7673322740906490614 stripped
 Transform:
   m_CorrespondingSourceObject: {fileID: 9216557044115219857, guid: 15afc9c2159d62149ab6a3bda53efccd, type: 3}
-  m_PrefabInstance: {fileID: 1556793756558352231}
-  m_PrefabAsset: {fileID: 0}
---- !u!82 &8963568199758343409 stripped
-AudioSource:
-  m_CorrespondingSourceObject: {fileID: 7637588631391155094, guid: 15afc9c2159d62149ab6a3bda53efccd, type: 3}
   m_PrefabInstance: {fileID: 1556793756558352231}
   m_PrefabAsset: {fileID: 0}
 --- !u!1001 &3676167605163499061
@@ -715,16 +808,20 @@ PrefabInstance:
       value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 5798887440987568039, guid: 84de5d2e613d48a4e84a7a10ce5df424, type: 3}
+      propertyPath: damage
+      value: 5
+      objectReference: {fileID: 0}
+    - target: {fileID: 5798887440987568039, guid: 84de5d2e613d48a4e84a7a10ce5df424, type: 3}
       propertyPath: shotOrigin
       value: 
       objectReference: {fileID: 562382406738178557}
     - target: {fileID: 5798887440987568039, guid: 84de5d2e613d48a4e84a7a10ce5df424, type: 3}
       propertyPath: audioSource
       value: 
-      objectReference: {fileID: 4973216622075710819}
+      objectReference: {fileID: 3557914224186980010}
     - target: {fileID: 5798887440987568039, guid: 84de5d2e613d48a4e84a7a10ce5df424, type: 3}
       propertyPath: displayName
-      value: Ratatatat
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 5798887440987568039, guid: 84de5d2e613d48a4e84a7a10ce5df424, type: 3}
       propertyPath: shakeIntensity
@@ -749,9 +846,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 3803752934548664264, guid: 84de5d2e613d48a4e84a7a10ce5df424, type: 3}
   m_PrefabInstance: {fileID: 3676167605163499061}
   m_PrefabAsset: {fileID: 0}
---- !u!82 &4973216622075710819 stripped
+--- !u!82 &3557914224186980010 stripped
 AudioSource:
-  m_CorrespondingSourceObject: {fileID: 8502854227070391126, guid: 84de5d2e613d48a4e84a7a10ce5df424, type: 3}
+  m_CorrespondingSourceObject: {fileID: 172296595879553183, guid: 84de5d2e613d48a4e84a7a10ce5df424, type: 3}
   m_PrefabInstance: {fileID: 3676167605163499061}
   m_PrefabAsset: {fileID: 0}
 --- !u!114 &7169052839125723538 stripped
@@ -779,12 +876,16 @@ PrefabInstance:
     m_TransformParent: {fileID: 3762359096041805864}
     m_Modifications:
     - target: {fileID: 2633898917018570008, guid: 8845cbcb7cfac64469c4eec662fee478, type: 3}
+      propertyPath: damage
+      value: 15
+      objectReference: {fileID: 0}
+    - target: {fileID: 2633898917018570008, guid: 8845cbcb7cfac64469c4eec662fee478, type: 3}
       propertyPath: shotOrigin
       value: 
       objectReference: {fileID: 1474741416242832214}
     - target: {fileID: 2633898917018570008, guid: 8845cbcb7cfac64469c4eec662fee478, type: 3}
       propertyPath: displayName
-      value: Kablooey
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 2633898917018570008, guid: 8845cbcb7cfac64469c4eec662fee478, type: 3}
       propertyPath: shakeIntensity
@@ -932,10 +1033,10 @@ PrefabInstance:
     - target: {fileID: 6000512866101074835, guid: 81a854fa061345c4ba16a0b301b3603d, type: 3}
       propertyPath: audioSource
       value: 
-      objectReference: {fileID: 8062953265968439184}
+      objectReference: {fileID: 6890021976241923184}
     - target: {fileID: 6000512866101074835, guid: 81a854fa061345c4ba16a0b301b3603d, type: 3}
       propertyPath: displayName
-      value: SnippyBoy
+      value: 
       objectReference: {fileID: 0}
     - target: {fileID: 6000512866101074835, guid: 81a854fa061345c4ba16a0b301b3603d, type: 3}
       propertyPath: tracerColor.b
@@ -982,9 +1083,9 @@ Transform:
   m_CorrespondingSourceObject: {fileID: 5468726811708965088, guid: 81a854fa061345c4ba16a0b301b3603d, type: 3}
   m_PrefabInstance: {fileID: 8102116573632579605}
   m_PrefabAsset: {fileID: 0}
---- !u!82 &8062953265968439184 stripped
+--- !u!82 &6890021976241923184 stripped
 AudioSource:
-  m_CorrespondingSourceObject: {fileID: 2275968584225331077, guid: 81a854fa061345c4ba16a0b301b3603d, type: 3}
+  m_CorrespondingSourceObject: {fileID: 3453916093962529893, guid: 81a854fa061345c4ba16a0b301b3603d, type: 3}
   m_PrefabInstance: {fileID: 8102116573632579605}
   m_PrefabAsset: {fileID: 0}
 --- !u!4 &8320804539692484466 stripped

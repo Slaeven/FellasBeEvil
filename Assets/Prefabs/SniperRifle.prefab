@@ -49,6 +49,7 @@ MonoBehaviour:
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::SniperRifle
   displayName: SnippyBoy
+  weaponType: 3
   damage: 90
   range: 150
   fireCooldown: 1.25

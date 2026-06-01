@@ -26,6 +26,7 @@ public class MachineGun : WeaponBase
 
     private void Reset()
     {
+        weaponType = WeaponType.MachineGun;
         ammoType = AmmoType.MachineGun;
         damage = 10f;
         range = 55f;
