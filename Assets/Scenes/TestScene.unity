@@ -558,6 +558,23 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 3a62e1568effb204e9e7edbcc6ad198b, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::Handgun
+--- !u!1 &564706260 stripped
+GameObject:
+  m_CorrespondingSourceObject: {fileID: 5206841068813236348, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
+  m_PrefabInstance: {fileID: 2335095268788446331}
+  m_PrefabAsset: {fileID: 0}
+--- !u!114 &564706265
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 564706260}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: f0fd6d1a6dcc4359974ad7152f7dc356, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: Assembly-CSharp::CameraShake
 --- !u!1 &656862032 stripped
 GameObject:
   m_CorrespondingSourceObject: {fileID: 790519134208313959, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
@@ -1592,9 +1609,17 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 2537385521079997318, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
+      propertyPath: reloadClip
+      value: 
+      objectReference: {fileID: 8300000, guid: 222ac11f23d685749a3b548c1143827e, type: 3}
+    - target: {fileID: 2537385521079997318, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 939853154}
+    - target: {fileID: 2537385521079997318, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
+      propertyPath: shakeIntensity
+      value: 0.6
+      objectReference: {fileID: 0}
     - target: {fileID: 2537385521079997318, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
       propertyPath: casingEjectionPoint
       value: 
@@ -1648,6 +1673,10 @@ PrefabInstance:
       value: 
       objectReference: {fileID: 656862033}
     - target: {fileID: 5641670181930206599, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
+      propertyPath: shakeIntensity
+      value: 0.25
+      objectReference: {fileID: 0}
+    - target: {fileID: 5641670181930206599, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
       propertyPath: casingEjectionPoint
       value: 
       objectReference: {fileID: 1496323442}
@@ -1655,6 +1684,10 @@ PrefabInstance:
       propertyPath: audioSource
       value: 
       objectReference: {fileID: 9055257577028135833}
+    - target: {fileID: 7169052839125723538, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
+      propertyPath: shakeIntensity
+      value: 0.25
+      objectReference: {fileID: 0}
     - target: {fileID: 7169052839125723538, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
       propertyPath: casingEjectionPoint
       value: 
@@ -1691,6 +1724,10 @@ PrefabInstance:
       propertyPath: 'weapons.Array.data[3]'
       value: 
       objectReference: {fileID: 939853153}
+    - target: {fileID: 8605319823229912097, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
+      propertyPath: shakeIntensity
+      value: 0.7
+      objectReference: {fileID: 0}
     - target: {fileID: 8605319823229912097, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
       propertyPath: casingEjectionPoint
       value: 
@@ -1762,6 +1799,9 @@ PrefabInstance:
       insertIndex: -1
       addedObject: {fileID: 1496323442}
     m_AddedComponents:
+    - targetCorrespondingSourceObject: {fileID: 5206841068813236348, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
+      insertIndex: -1
+      addedObject: {fileID: 564706265}
     - targetCorrespondingSourceObject: {fileID: 790519134208313959, guid: d4dee4ed842b8b74180bfffeddd3c196, type: 3}
       insertIndex: -1
       addedObject: {fileID: 656862033}

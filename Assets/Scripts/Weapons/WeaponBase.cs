@@ -26,6 +26,8 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected AudioClip fireClip;
     [SerializeField, Range(0f, 1f)] protected float fireVolume = 1f;
     [SerializeField] protected Vector2 firePitchRange = Vector2.one;
+    [SerializeField] protected AudioClip reloadClip;
+    [SerializeField, Range(0f, 1f)] protected float reloadVolume = 1f;
 
     [Header("Casing Ejection")]
     [SerializeField] protected EjectedCasing casingPrefab;
@@ -38,6 +40,10 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField, Range(0f, 1f)] protected float casingLandingVolume = 0.7f;
     [SerializeField] protected Vector2 casingLandingPitchRange = new Vector2(0.95f, 1.05f);
 
+    [Header("Camera Shake")]
+    [SerializeField] protected float shakeIntensity = 0.08f;
+    [SerializeField] protected float shakeDuration = 0.08f;
+
     public int CurrentAmmo => currentAmmo;
     public int ReserveAmmo => inventory != null ? inventory.GetAmmoCount(ammoType) : reserveAmmo;
     public int MagazineSize => magazineSize;
@@ -49,8 +55,10 @@ public abstract class WeaponBase : MonoBehaviour
 
     protected PlayerInventory inventory;
     protected Camera aimCamera;
+    protected CameraShake cameraShake;
     protected float nextFireTime;
     protected bool isReloading;
+    protected Coroutine reloadRoutine;
 
     public virtual void Initialise(Camera camera, PlayerInventory playerInventory = null)
     {
@@ -63,6 +71,14 @@ public abstract class WeaponBase : MonoBehaviour
 
         if (audioSource == null && fireClip != null)
             audioSource = gameObject.AddComponent<AudioSource>();
+
+        if (aimCamera != null)
+        {
+            cameraShake = aimCamera.GetComponent<CameraShake>();
+
+            if (cameraShake == null)
+                cameraShake = aimCamera.gameObject.AddComponent<CameraShake>();
+        }
     }
 
     public virtual void TryFire()
@@ -73,7 +89,7 @@ public abstract class WeaponBase : MonoBehaviour
         Fire();
     }
 
-    protected bool CanFireNow()
+    protected virtual bool CanFireNow()
     {
         if (aimCamera == null)
         {
@@ -102,6 +118,7 @@ public abstract class WeaponBase : MonoBehaviour
         ConsumeAmmo(1);
         PlayFireSound();
         EjectCasing();
+        ApplyCameraShake();
 
         FireHitscan(GetAimRay(), damage, range);
 
@@ -126,6 +143,17 @@ public abstract class WeaponBase : MonoBehaviour
     protected virtual void PlayFireSound()
     {
         PlayOneShot(fireClip, fireVolume, firePitchRange);
+    }
+
+    protected virtual void PlayReloadSound()
+    {
+        PlayOneShot(reloadClip, reloadVolume);
+    }
+
+    protected void ApplyCameraShake()
+    {
+        if (cameraShake != null)
+            cameraShake.Shake(shakeIntensity, shakeDuration);
     }
 
     protected virtual void EjectCasing()
@@ -222,7 +250,7 @@ public abstract class WeaponBase : MonoBehaviour
         if (ReserveAmmo <= 0)
             return;
 
-        StartCoroutine(ReloadRoutine());
+        reloadRoutine = StartCoroutine(ReloadRoutine());
     }
 
     protected virtual System.Collections.IEnumerator ReloadRoutine()
@@ -230,6 +258,7 @@ public abstract class WeaponBase : MonoBehaviour
         isReloading = true;
 
         Debug.Log($"{name} reloading...");
+        PlayReloadSound();
 
         yield return new WaitForSeconds(reloadTime);
 
@@ -244,7 +273,42 @@ public abstract class WeaponBase : MonoBehaviour
             reserveAmmo -= ammoToLoad;
 
         isReloading = false;
+        reloadRoutine = null;
 
         Debug.Log($"{name} reloaded. Ammo: {currentAmmo}/{ReserveAmmo}");
+    }
+
+    protected virtual void CancelReload()
+    {
+        if (reloadRoutine != null)
+        {
+            StopCoroutine(reloadRoutine);
+            reloadRoutine = null;
+        }
+
+        isReloading = false;
+    }
+
+    public virtual void ToggleScope()
+    {
+    }
+
+    public virtual float GetAimFOV(float defaultAimFOV)
+    {
+        return defaultAimFOV;
+    }
+
+    public virtual void OnEquipped()
+    {
+    }
+
+    public virtual void OnUnequipped()
+    {
+        CancelReload();
+    }
+
+    protected virtual void OnDisable()
+    {
+        CancelReload();
     }
 }

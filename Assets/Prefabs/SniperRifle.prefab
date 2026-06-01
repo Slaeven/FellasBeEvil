@@ -62,6 +62,8 @@ MonoBehaviour:
   fireClip: {fileID: 8300000, guid: 873e7c79e56e29244a4f2a11b8e23109, type: 3}
   fireVolume: 1
   firePitchRange: {x: 1, y: 1}
+  reloadClip: {fileID: 0}
+  reloadVolume: 1
   casingPrefab: {fileID: 3582039608657068767, guid: 418ce758e2634e6db4890bb300db0c8a, type: 3}
   casingEjectionPoint: {fileID: 0}
   casingLocalOffset: {x: 0.2, y: 0.1, z: 0}
@@ -74,6 +76,14 @@ MonoBehaviour:
   - {fileID: 8300000, guid: e3806ee64076e394a935b4fb8f3ac1a1, type: 3}
   casingLandingVolume: 0.7
   casingLandingPitchRange: {x: 0.95, y: 1.05}
+  shakeIntensity: 0.14
+  shakeDuration: 0.12
+  boltActionClip: {fileID: 8300000, guid: 9b348fe03f269fc43b8d80fc3f75c6b0, type: 3}
+  boltActionDelay: 0.45
+  boltActionVolume: 1
+  startScoped: 0
+  scopedFOV: 18
+  scopeOverlay: {fileID: 0}
 --- !u!82 &3453916093962529893
 AudioSource:
   m_ObjectHideFlags: 0

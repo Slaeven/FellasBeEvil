@@ -61,6 +61,15 @@
                     "initialStateCheck": false
                 },
                 {
+                    "name": "ToggleScope",
+                    "type": "Button",
+                    "id": "85185a7d-6423-48be-ae7f-97aa77a3ed8f",
+                    "expectedControlType": "",
+                    "processors": "",
+                    "interactions": "",
+                    "initialStateCheck": false
+                },
+                {
                     "name": "NextWeapon",
                     "type": "Button",
                     "id": "42fe0301-a1f5-4759-bc06-bb86c4edff26",
@@ -179,6 +188,28 @@
                     "processors": "",
                     "groups": "",
                     "action": "ToggleFireMode",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "34e6087b-16bd-4515-81e8-a76b4e310a85",
+                    "path": "<Keyboard>/z",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleScope",
+                    "isComposite": false,
+                    "isPartOfComposite": false
+                },
+                {
+                    "name": "",
+                    "id": "db91bc45-f18c-4fab-9e5b-b7aa9e6f2871",
+                    "path": "<Gamepad>/rightStickPress",
+                    "interactions": "",
+                    "processors": "",
+                    "groups": "",
+                    "action": "ToggleScope",
                     "isComposite": false,
                     "isPartOfComposite": false
                 },

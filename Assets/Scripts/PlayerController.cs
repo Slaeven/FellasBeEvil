@@ -38,17 +38,21 @@ public class PlayerController : MonoBehaviour
     private InputAction fireAction;
     private InputAction reloadAction;
     private InputAction toggleFireModeAction;
+    private InputAction toggleScopeAction;
     private InputAction nextWeaponAction;
     private InputAction previousWeaponAction;
     private InputAction[] weaponSlotActions;
     private bool wasFirePressed;
     private bool wasReloadPressed;
     private bool wasToggleFireModePressed;
+    private bool wasToggleScopePressed;
     private bool wasNextWeaponPressed;
     private bool wasPreviousWeaponPressed;
     private bool[] wasWeaponSlotPressed;
 
     private Camera cam;
+    private CameraShake cameraShake;
+    private Vector3 previousCameraShakeOffset;
 
     [Header("Gravity")]
     [SerializeField] private float gravity = -20f;
@@ -82,6 +86,7 @@ public class PlayerController : MonoBehaviour
         fireAction = playerInput.actions.FindAction("Fire", false);
         reloadAction = playerInput.actions.FindAction("Reload", false);
         toggleFireModeAction = playerInput.actions.FindAction("ToggleFireMode", false);
+        toggleScopeAction = playerInput.actions.FindAction("ToggleScope", false);
         nextWeaponAction = playerInput.actions.FindAction("NextWeapon", false);
         previousWeaponAction = playerInput.actions.FindAction("PreviousWeapon", false);
         weaponSlotActions = new InputAction[]
@@ -96,6 +101,10 @@ public class PlayerController : MonoBehaviour
         if (mainCamera != null)
         {
             cam = mainCamera.GetComponent<Camera>();
+            cameraShake = mainCamera.GetComponent<CameraShake>();
+
+            if (cameraShake == null)
+                cameraShake = mainCamera.gameObject.AddComponent<CameraShake>();
         }
 
         if (fireAction == null)
@@ -128,6 +137,7 @@ public class PlayerController : MonoBehaviour
         fireAction?.Enable();
         reloadAction?.Enable();
         toggleFireModeAction?.Enable();
+        toggleScopeAction?.Enable();
         nextWeaponAction?.Enable();
         previousWeaponAction?.Enable();
 
@@ -146,6 +156,7 @@ public class PlayerController : MonoBehaviour
         fireAction?.Disable();
         reloadAction?.Disable();
         toggleFireModeAction?.Disable();
+        toggleScopeAction?.Disable();
         nextWeaponAction?.Disable();
         previousWeaponAction?.Disable();
 
@@ -213,6 +224,16 @@ public class PlayerController : MonoBehaviour
         }
 
         wasToggleFireModePressed = isToggleFireModePressed;
+
+        float toggleScopeValue = toggleScopeAction != null ? toggleScopeAction.ReadValue<float>() : 0f;
+        bool isToggleScopePressed = toggleScopeValue > 0.2f;
+
+        if (isToggleScopePressed && !wasToggleScopePressed && equippedWeapon != null)
+        {
+            equippedWeapon.ToggleScope();
+        }
+
+        wasToggleScopePressed = isToggleScopePressed;
 
         ReadWeaponSwitchInput();
     }
@@ -298,6 +319,9 @@ public class PlayerController : MonoBehaviour
         if (weapons == null || index < 0 || index >= weapons.Length || weapons[index] == null)
             return;
 
+        if (equippedWeapon != null)
+            equippedWeapon.OnUnequipped();
+
         for (int i = 0; i < weapons.Length; i++)
         {
             if (weapons[i] != null)
@@ -306,6 +330,7 @@ public class PlayerController : MonoBehaviour
 
         equippedWeapon = weapons[index];
         equippedWeapon.Initialise(cam, inventory);
+        equippedWeapon.OnEquipped();
 
         Debug.Log($"Equipped {equippedWeapon.name}. Ammo: {equippedWeapon.CurrentAmmo}/{equippedWeapon.ReserveAmmo}");
     }
@@ -369,15 +394,22 @@ public class PlayerController : MonoBehaviour
 
         Vector3 targetPosition = isAiming ? aimCameraLocalPosition : normalCameraLocalPosition;
 
-        mainCamera.localPosition = Vector3.Lerp(
-            mainCamera.localPosition,
+        Vector3 baseCameraPosition = mainCamera.localPosition - previousCameraShakeOffset;
+
+        baseCameraPosition = Vector3.Lerp(
+            baseCameraPosition,
             targetPosition,
             cameraAimSmoothSpeed * Time.deltaTime
         );
 
+        previousCameraShakeOffset = cameraShake != null ? cameraShake.CurrentOffset : Vector3.zero;
+        mainCamera.localPosition = baseCameraPosition + previousCameraShakeOffset;
+
         if (cam != null)
         {
-            float targetFOV = isAiming ? aimFOV : normalFOV;
+            float targetFOV = isAiming && equippedWeapon != null
+                ? equippedWeapon.GetAimFOV(aimFOV)
+                : normalFOV;
 
             cam.fieldOfView = Mathf.Lerp(
                 cam.fieldOfView,
