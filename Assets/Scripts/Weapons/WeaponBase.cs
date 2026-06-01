@@ -11,6 +11,10 @@ public abstract class WeaponBase : MonoBehaviour
     [SerializeField] protected float fireCooldown = 0.35f;
     [SerializeField] protected LayerMask hitMask = ~0;
 
+    [Header("Shot Origin")]
+    [SerializeField] protected Transform shotOrigin;
+    [SerializeField] protected bool aimFromCameraToCrosshair = true;
+
     [Header("Ammo")]
     [SerializeField] protected AmmoType ammoType = AmmoType.Handgun;
     [SerializeField] protected int magazineSize = 10;
@@ -43,6 +47,13 @@ public abstract class WeaponBase : MonoBehaviour
     [Header("Camera Shake")]
     [SerializeField] protected float shakeIntensity = 0.08f;
     [SerializeField] protected float shakeDuration = 0.08f;
+
+    [Header("Tracer")]
+    [SerializeField] protected bool showTracers = true;
+    [SerializeField] protected Color tracerColor = new Color(1f, 0.95f, 0.7f, 0.12f);
+    [SerializeField] protected float tracerWidth = 0.012f;
+    [SerializeField] protected float tracerDuration = 0.045f;
+    [SerializeField] protected float tracerStartOffset = 0.45f;
 
     public int CurrentAmmo => currentAmmo;
     public int ReserveAmmo => inventory != null ? inventory.GetAmmoCount(ammoType) : reserveAmmo;
@@ -127,7 +138,21 @@ public abstract class WeaponBase : MonoBehaviour
 
     protected Ray GetAimRay()
     {
-        return aimCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+        Ray cameraRay = aimCamera.ViewportPointToRay(new Vector3(0.5f, 0.5f, 0f));
+
+        if (shotOrigin == null)
+            return cameraRay;
+
+        if (!aimFromCameraToCrosshair)
+            return new Ray(shotOrigin.position, shotOrigin.forward);
+
+        Vector3 aimPoint = cameraRay.origin + cameraRay.direction * range;
+
+        if (Physics.Raycast(cameraRay, out RaycastHit cameraHit, range, hitMask))
+            aimPoint = cameraHit.point;
+
+        Vector3 shotDirection = (aimPoint - shotOrigin.position).normalized;
+        return new Ray(shotOrigin.position, shotDirection);
     }
 
     protected void BeginFireCooldown()
@@ -210,6 +235,8 @@ public abstract class WeaponBase : MonoBehaviour
     {
         if (Physics.Raycast(ray, out RaycastHit hit, shotRange, hitMask))
         {
+            DrawTracer(ray, hit.point);
+
             Debug.Log($"{name} hit {hit.collider.name}");
 
             Damageable damageable = hit.collider.GetComponent<Damageable>();
@@ -231,8 +258,22 @@ public abstract class WeaponBase : MonoBehaviour
             return true;
         }
 
+        DrawTracer(ray, ray.origin + ray.direction * shotRange);
+
         Debug.Log($"{name} missed.");
         return false;
+    }
+
+    protected virtual void DrawTracer(Ray ray, Vector3 endPoint)
+    {
+        if (!showTracers)
+            return;
+
+        GameObject tracerObject = new GameObject($"{name} Tracer");
+        TracerTrail tracer = tracerObject.AddComponent<TracerTrail>();
+        Vector3 startPoint = ray.origin + ray.direction * tracerStartOffset;
+
+        tracer.Initialise(startPoint, endPoint, tracerColor, tracerWidth, tracerDuration);
     }
 
     public virtual void ToggleFireMode()

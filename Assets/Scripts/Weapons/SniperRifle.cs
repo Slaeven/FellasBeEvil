@@ -26,6 +26,11 @@ public class SniperRifle : WeaponBase
         currentAmmo = 5;
         reserveAmmo = 15;
         reloadTime = 2.4f;
+        tracerColor = new Color(1f, 0.92f, 0.45f, 0.8f);
+        tracerWidth = 0.035f;
+        tracerDuration = 0.12f;
+        shakeIntensity = 0.14f;
+        shakeDuration = 0.12f;
     }
 
     public override void Initialise(Camera camera, PlayerInventory playerInventory = null)

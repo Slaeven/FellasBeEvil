@@ -1,5 +1,36 @@
 %YAML 1.1
 %TAG !u! tag:unity3d.com,2011:
+--- !u!1 &1916212860826476365
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 3803752934548664264}
+  m_Layer: 0
+  m_Name: ShotOrigin
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &3803752934548664264
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 1916212860826476365}
+  serializedVersion: 2
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
+  m_LocalPosition: {x: 0, y: 0.012, z: 0.228}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3548375884010805790}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!1 &2020309483183055063
 GameObject:
   m_ObjectHideFlags: 0
@@ -11,6 +42,7 @@ GameObject:
   - component: {fileID: 3548375884010805790}
   - component: {fileID: 5798887440987568039}
   - component: {fileID: 172296595879553183}
+  - component: {fileID: 8502854227070391126}
   m_Layer: 0
   m_Name: MachineGun
   m_TagString: Untagged
@@ -26,11 +58,13 @@ Transform:
   m_PrefabAsset: {fileID: 0}
   m_GameObject: {fileID: 2020309483183055063}
   serializedVersion: 2
-  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalRotation: {x: 0, y: 0, z: 0, w: 1}
   m_LocalPosition: {x: 0.25479, y: -1.087, z: -0.36214}
   m_LocalScale: {x: 1, y: 1, z: 1}
   m_ConstrainProportionsScale: 0
-  m_Children: []
+  m_Children:
+  - {fileID: 3803752934548664264}
+  - {fileID: 6149959567901872104}
   m_Father: {fileID: 0}
   m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
 --- !u!114 &5798887440987568039
@@ -45,27 +79,29 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: 77c2a326391a4b53bdbe2dbb9377d6de, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::MachineGun
-  displayName: 
+  displayName: Ratatatat
   damage: 10
   range: 55
   fireCooldown: 0.09
   hitMask:
     serializedVersion: 2
     m_Bits: 4294967295
+  shotOrigin: {fileID: 3803752934548664264}
+  aimFromCameraToCrosshair: 1
   ammoType: 2
   magazineSize: 30
   currentAmmo: 30
   reserveAmmo: 90
   reloadTime: 1.8
   hitMarkerPrefab: {fileID: 3143303700646029335, guid: fc0390c1eea031d4ea7be41d968db492, type: 3}
-  audioSource: {fileID: 172296595879553183}
+  audioSource: {fileID: 8502854227070391126}
   fireClip: {fileID: 8300000, guid: 6b3e897071579d645b564fb01c1ec40d, type: 3}
   fireVolume: 1
   firePitchRange: {x: 1, y: 1}
   reloadClip: {fileID: 8300000, guid: f901d06aa3fb3f84ea13f440d3e94114, type: 3}
   reloadVolume: 1
   casingPrefab: {fileID: 3582039608657068767, guid: 418ce758e2634e6db4890bb300db0c8a, type: 3}
-  casingEjectionPoint: {fileID: 0}
+  casingEjectionPoint: {fileID: 6149959567901872104}
   casingLocalOffset: {x: 0.2, y: 0.1, z: 0}
   casingEjectionVelocity: {x: 1.4, y: 1.1, z: -0.25}
   casingTorque: {x: 8, y: 16, z: 8}
@@ -76,8 +112,13 @@ MonoBehaviour:
   - {fileID: 8300000, guid: 8000e1ffea5305a49ae3825c611de42b, type: 3}
   casingLandingVolume: 0.7
   casingLandingPitchRange: {x: 0.95, y: 1.05}
-  shakeIntensity: 0.06
+  shakeIntensity: 0.25
   shakeDuration: 0.05
+  showTracers: 1
+  tracerColor: {r: 1, g: 0.95, b: 0.7, a: 0.06}
+  tracerWidth: 0.008
+  tracerDuration: 0.03
+  tracerStartOffset: 0.45
   fireMode: 0
   burstShotCount: 3
   burstShotDelay: 0.08
@@ -180,3 +221,131 @@ AudioSource:
     m_PreInfinity: 2
     m_PostInfinity: 2
     m_RotationOrder: 4
+--- !u!82 &8502854227070391126
+AudioSource:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 2020309483183055063}
+  m_Enabled: 1
+  serializedVersion: 4
+  OutputAudioMixerGroup: {fileID: 0}
+  m_audioClip: {fileID: 0}
+  m_Resource: {fileID: 0}
+  m_PlayOnAwake: 0
+  m_Volume: 1
+  m_Pitch: 1
+  Loop: 0
+  Mute: 0
+  Spatialize: 0
+  SpatializePostEffects: 0
+  Priority: 128
+  DopplerLevel: 1
+  MinDistance: 1
+  MaxDistance: 500
+  Pan2D: 0
+  rolloffMode: 0
+  BypassEffects: 0
+  BypassListenerEffects: 0
+  BypassReverbZones: 0
+  rolloffCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    - serializedVersion: 3
+      time: 1
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  panLevelCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  spreadCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 0
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+  reverbZoneMixCustomCurve:
+    serializedVersion: 2
+    m_Curve:
+    - serializedVersion: 3
+      time: 0
+      value: 1
+      inSlope: 0
+      outSlope: 0
+      tangentMode: 0
+      weightedMode: 0
+      inWeight: 0.33333334
+      outWeight: 0.33333334
+    m_PreInfinity: 2
+    m_PostInfinity: 2
+    m_RotationOrder: 4
+--- !u!1 &3001573642573212573
+GameObject:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  serializedVersion: 6
+  m_Component:
+  - component: {fileID: 6149959567901872104}
+  m_Layer: 0
+  m_Name: CasingEjectionpoint
+  m_TagString: Untagged
+  m_Icon: {fileID: 0}
+  m_NavMeshLayer: 0
+  m_StaticEditorFlags: 0
+  m_IsActive: 1
+--- !u!4 &6149959567901872104
+Transform:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 3001573642573212573}
+  serializedVersion: 2
+  m_LocalRotation: {x: -0, y: -0, z: -0, w: 1}
+  m_LocalPosition: {x: -0.07779001, y: -0.052, z: 0.015}
+  m_LocalScale: {x: 1, y: 1, z: 1}
+  m_ConstrainProportionsScale: 0
+  m_Children: []
+  m_Father: {fileID: 3548375884010805790}
+  m_LocalEulerAnglesHint: {x: 0, y: 0, z: 0}
