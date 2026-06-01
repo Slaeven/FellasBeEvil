@@ -33,9 +33,7 @@ public class AmmoUI : MonoBehaviour
             return;
         }
 
-        string ammoLine = displayedWeapon.IsReloading
-            ? "Reloading..."
-            : $"{displayedWeapon.CurrentAmmo} / {displayedWeapon.ReserveAmmo}";
+        string ammoLine = $"{displayedWeapon.CurrentAmmo} / {displayedWeapon.ReserveAmmo}";
 
         if (!showWeaponName)
         {
