@@ -256,8 +256,8 @@ MonoBehaviour:
   m_Script: {fileID: 11500000, guid: c66d98dc054b475c9e01e2e38d80664d, type: 3}
   m_Name: 
   m_EditorClassIdentifier: Assembly-CSharp::PlayerInventory
-  width: 8
-  height: 6
+  width: 10
+  height: 8
   startingAmmo:
   - ammoType: 0
     amount: 30
@@ -763,6 +763,10 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 3762359096041805864}
     m_Modifications:
+    - target: {fileID: 172296595879553183, guid: 84de5d2e613d48a4e84a7a10ce5df424, type: 3}
+      propertyPath: m_Volume
+      value: 0.8
+      objectReference: {fileID: 0}
     - target: {fileID: 2020309483183055063, guid: 84de5d2e613d48a4e84a7a10ce5df424, type: 3}
       propertyPath: m_Name
       value: MachineGun

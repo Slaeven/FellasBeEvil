@@ -26,6 +26,10 @@ public class LootableItem : MonoBehaviour
     [SerializeField] private string gamepadPrompt = "A";
     [SerializeField] private string keyboardPrompt = "E";
 
+    [Header("Audio")]
+    [SerializeField] private AudioClip pickupSound;
+    [SerializeField, Range(0f, 1f)] private float pickupSoundVolume = 1f;
+
     private PlayerInventory playerInventory;
     private InventoryMenuUI inventoryMenu;
     private Collider[] itemColliders;
@@ -55,9 +59,10 @@ public class LootableItem : MonoBehaviour
         }
 
         RefreshPlayerInPickupVolume();
-        SetPromptVisible(playerInRange && !pickUpOnContact);
+        bool canInteract = playerInRange && !IsInventoryMenuOpen();
+        SetPromptVisible(canInteract && !pickUpOnContact);
 
-        if (!playerInRange)
+        if (!canInteract)
             return;
 
         if (pickUpOnContact)
@@ -128,13 +133,14 @@ public class LootableItem : MonoBehaviour
 
     private void TryPickup()
     {
-        if (playerInventory == null)
+        if (playerInventory == null || IsInventoryMenuOpen())
             return;
 
         InventoryEntry entry = CreateEntry();
 
         if (playerInventory.TryAddEntryAuto(entry))
         {
+            PlayPickupSound();
             SetPromptVisible(false);
             Destroy(gameObject);
             return;
@@ -147,6 +153,7 @@ public class LootableItem : MonoBehaviour
             return;
 
         isPending = true;
+        PlayPickupSound();
         SetPromptVisible(false);
         inventoryMenu.OpenForLoot(entry, this);
 
@@ -207,6 +214,19 @@ public class LootableItem : MonoBehaviour
         foundInventory = other.GetComponentInParent<PlayerInventory>();
         foundMenu = foundInventory != null ? foundInventory.GetComponent<InventoryMenuUI>() : null;
         return foundInventory != null;
+    }
+
+    private bool IsInventoryMenuOpen()
+    {
+        return inventoryMenu != null && inventoryMenu.IsOpen;
+    }
+
+    private void PlayPickupSound()
+    {
+        if (pickupSound == null)
+            return;
+
+        AudioSource.PlayClipAtPoint(pickupSound, transform.position, pickupSoundVolume);
     }
 
     private void SetPromptVisible(bool visible)
